@@ -29,16 +29,17 @@ export class MessinchargeComponent implements OnInit {
             username: 'rava' 
         },
         { username: 'onions' },
-        // { username: 'Meher' },
+        //  },
+        // { username: 'Durga Prasad' }{ username: 'Meher' },
         // { username: 'manoj' },
-        // { username: 'krishna' },
-        // { username: 'Durga Prasad' }
+        // { username: 'krishna'
     ];
 
   ngOnInit() {
     this.taskForm = this.fb.group({
-      assigned_to: ['', Validators.required],
-      task_name: ['', Validators.required]
+      name: ['', Validators.required],
+       quantity: ['', Validators.required],
+       price:['', Validators.required]
      
 
 
@@ -75,21 +76,26 @@ removeList(i: any)
 }    
 initLink() {
         return this.fb.group({
-             assigned_to: ['', Validators.required],
+             name: ['', Validators.required],
             task_name: ['', Validators.required],
-            
-      
-
+            price:['', Validators.required]
         });
     }
     data;
 save() {
-  this._apiService.getlist().subscribe(data=>{
+  let val={}
+ val['name'] = this.taskForm.value.name;
+ val['quantity'] = this.taskForm.value.quantity;
+ val['price'] = this.taskForm.value.price;
+ console.log(val);
+  this._apiService.insertlist(val).subscribe(data=>{
     this.data=data;
      console.log(this.data);
+     this.taskForm.reset();
   })
- 
-     
+  }
+    getuser($event)
+    {
+      let value=$event.target.value;
     }
-    
 }

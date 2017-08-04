@@ -74,7 +74,8 @@
                       <td>{{dt.cost}}</td>
                       <td>{{dt.totaldues}}</td>
                       <td style="text-align:center">123</td>
-                      <td style="text-align:center"><a class="btn btn-info btn-xs btn-square"><i class="fa fa-pencil"></i></a>&nbsp; <a class="btn btn-danger btn-xs btn-square"><i class="fa fa-trash"></i></a></td>
+                      <td style="text-align:center"><a class="btn btn-info btn-xs btn-square"><i class="fa fa-pencil"></i></a>&nbsp; 
+                        <a class="btn btn-danger btn-xs btn-square" (click)="delete(dt)"><i class="fa fa-trash"></i></a></td>
                     </tr>
                     <!-- <tr *ngFor="let dt of roomType; let i=index">
                       <td>{{i + 1}}</td>

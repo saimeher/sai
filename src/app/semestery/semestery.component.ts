@@ -14,6 +14,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 
 export class SemesteryComponent implements OnInit {
   roomType: any;
+  id : any;
+  data1;
 
   constructor(private _router: Router,
     private _route: ActivatedRoute,
@@ -76,6 +78,14 @@ export class SemesteryComponent implements OnInit {
   }
   // YourConfirmEvent() {
   //   alert('You cliked confirm');
+  // }
+
+  // delete(td)
+  // {
+  //   this.id=td.id;
+  //   this._apiService.delete(this.id).subscribe(data1=>{
+  //     this.data1=data1;
+  //   })
   // }
 
 }

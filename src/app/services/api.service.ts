@@ -48,7 +48,9 @@ export class ApiService {
     const body = {}
     return this.callApi(AppSettings.GETLIST_API, 'get', body);
   }
- 
+  insertlist(data) {
+    return this.callApi(AppSettings.INSERTLIST_API, 'post', data);
+  }
  
 
   // responsible for making api calls

@@ -11,12 +11,27 @@
   <div id="page-wrapper">
 
     <div class="spl-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="page-title">
+            <!--<h1>
+              Admin <small>Dashboard</small>
+            </h1>-->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard</a>
+              </li>
+              <!--<li class="active">Blank Page</li>-->
+            </ol>
+          </div>
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
 
       <!-- begin PAGE TITLE ROW -->
       
       <!-- /.row -->
       <!-- end PAGE TITLE ROW -->
-      <div class="">
+      <!-- <div class="">
         <div class="panel panel-primary">
           <div class="panel-heading">Add Daily Work
           </div>
@@ -46,16 +61,19 @@
                 <div class="form-horizontal">
                   <div class="col-md-12">
                     <div class="col-md-2">
-                      <select formControlName="assigned_to" name="assigned_to" class="form-control">
-                            <option selected value="">Selected</option>
-                           <!--<option *ngFor="let user of data" value="{{user.username}}">{{user.username}}</option>-->
+                      <select  class="form-control" formControlName="name" name="name">
+                           
                             <option *ngFor="let user of users" value="{{user.username}}">{{user.username}}</option>
                                                                                 
                                </select>
 
                     </div>
+                    <div class="col-md-6">
+                      <input formControlName="quantity" name="quantity" type="text" placeholder="Enter quantity in kgs" class="form-control">
+
+                    </div>
                     <div class="col-md-2">
-                      <input formControlName="task_name" name="task_name" type="text" placeholder="Enter task name" class="form-control">
+                      <input formControlName="price" name="price" type="text" placeholder="Enter price" class="form-control">
 
                     </div>
 
@@ -66,7 +84,7 @@
 
 
                 <div class="row">
-                  <!--<div class="clearfix"></div><br/>-->
+                
                   <button (click)="addactiveList()" type="button" style="margin-right:90px" class="btn default pull-right">Add More</button>
                   <div class="row" *ngIf="addmore_length>1">
                     <button (click)="removeList(addmore_length)" type="button" style="margin-right:10px" class="btn default pull-right">Remove</button>
@@ -92,7 +110,53 @@
             </div>
           </div>
         </div>
+      </div> -->
+    <div class="portlet portlet-default">
+  <div class="portlet-heading">
+    <div class="portlet-title">
+      <h4> Add Item </h4>
+    </div>
+    <!-- <div class="portlet-widgets">
+      <a (click)="hideAddForm()" style="cursor: pointer !important"><i class="fa fa-times"></i></a>
+    </div> -->
+    <div class="clearfix"></div>
+  </div>
+  <div class="portlet-body">
+    <form (ngSubmit)="save()" method="post" [formGroup]="taskForm" novalidate>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <div class="col-md-3">
+            <label>Name</label>
+            <select  class="form-control" formControlName="name" name="name">
+            <option *ngFor="let user of users" value="{{user.username}}">{{user.username}}</option>
+             </select>
+          </div>
+          <div class="col-md-3">
+            <label for="email">Quantity in kgs</label>
+            <input type="text" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
+          </div>
+          <div class="col-md-2">
+            <label for="email">Price</label>
+            <input type="text" name="price" class="form-control" value="price" formControlName="price" />
+                  </div>
+                  <div class="row">
+                  <button (click)="addactiveList()" type="button" style="margin-right:90px" class="btn default pull-right">Add More</button>
+                  <div class="row" *ngIf="addmore_length>1">
+                    <button (click)="removeList(addmore_length)" type="button" style="margin-right:10px" class="btn default pull-right">Remove</button>
+                  </div>
+                </div>
+           
+
+          <div class="col-md-2">
+            <button type="submit" [disabled]="!taskForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
+          </div>
+        </div>
       </div>
+    </form>
+  </div>
+</div>
+
+
       <!-- end DASHBOARD CIRCLE TILES -->
     </div>
     <!-- /.page-content -->

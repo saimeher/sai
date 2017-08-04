@@ -8,7 +8,8 @@ export class AppSettings {
 
     // VENKAT
     public static ADD_TYPE_API: string = 'http://192.168.0.111/hmsserver/Api/addtype';
-    public static ROOMTYPE_API: string = 'http://192.168.0.111/hmsserver/Api/roomtype';
+    public static ROOMTYPE_API: string = 'http://localhost/hmsserver/Api/roomtype';
     public static ADD_REGISTRATION_API: string = 'http://192.168.0.111/hmsserver/Api/addregistration';
-      public static GETLIST_API: string = 'http://192.168.0.111/hmsserver/Api/getlist';
+      public static GETLIST_API: string = 'http://localhost/hmsserver/Api/getlist';
+      public static INSERTLIST_API:string = 'http://localhost/hmsserver/Api/insertlist';
 }
