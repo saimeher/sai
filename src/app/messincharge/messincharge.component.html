@@ -1,0 +1,102 @@
+<div id="wrapper">
+  <!-- begin TOP NAVIGATION -->
+  <app-header></app-header>
+  <!-- end TOP NAVIGATION -->
+
+  <!-- begin SIDE NAVIGATION -->
+  <app-sidemenu [page]="_apiService.page"></app-sidemenu>
+  <!-- end SIDE NAVIGATION -->
+
+  <!-- begin MAIN PAGE CONTENT -->
+  <div id="page-wrapper">
+
+    <div class="spl-content">
+
+      <!-- begin PAGE TITLE ROW -->
+      
+      <!-- /.row -->
+      <!-- end PAGE TITLE ROW -->
+      <div class="">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Add Daily Work
+          </div>
+          <div class="panel-body">
+            <div class="wrapper">
+
+              <div class="container-fluid">
+
+              </div>
+              <form [formGroup]="taskForm" (ngSubmit)="save()" class="form-horizontal">
+
+
+                <div class="form-horizontal">
+                  <div class="col-md-12">
+                    <div class="col-md-2">
+                      <label>Task</label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Assigned To</label>
+                    </div>
+
+                  </div>
+                </div>
+
+
+
+                <div class="form-horizontal">
+                  <div class="col-md-12">
+                    <div class="col-md-2">
+                      <select formControlName="assigned_to" name="assigned_to" class="form-control">
+                            <option selected value="">Selected</option>
+                           <!--<option *ngFor="let user of data" value="{{user.username}}">{{user.username}}</option>-->
+                            <option *ngFor="let user of users" value="{{user.username}}">{{user.username}}</option>
+                                                                                
+                               </select>
+
+                    </div>
+                    <div class="col-md-2">
+                      <input formControlName="task_name" name="task_name" type="text" placeholder="Enter task name" class="form-control">
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div class="row">
+                  <!--<div class="clearfix"></div><br/>-->
+                  <button (click)="addactiveList()" type="button" style="margin-right:90px" class="btn default pull-right">Add More</button>
+                  <div class="row" *ngIf="addmore_length>1">
+                    <button (click)="removeList(addmore_length)" type="button" style="margin-right:10px" class="btn default pull-right">Remove</button>
+                  </div>
+                </div>
+
+
+                <div class="form-actions">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="row">
+                        <div class="col-md-offset-7 col-md-5">
+                          <button type="submit" class="btn btn-info"> Submit</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end DASHBOARD CIRCLE TILES -->
+    </div>
+    <!-- /.page-content -->
+  </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
+</div>
