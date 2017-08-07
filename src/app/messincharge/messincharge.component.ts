@@ -5,6 +5,7 @@ import { AppSettings } from '../app.settings';
 import { Popup } from 'ng2-opd-popup';
 import {  FormControl } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControlName } from '@angular/forms';
+import { IMyOptions, IMyDateModel, IMyDpOptions } from 'mydatepicker';
 
 
 @Component({
@@ -13,8 +14,9 @@ import { FormGroup, FormArray, FormBuilder, Validators, FormControlName } from '
   styleUrls: ['./messincharge.component.css']
 })
 export class MessinchargeComponent implements OnInit {
-    taskForm: FormGroup;
+    itemaddForm: FormGroup;
      addmore_length;
+     insert_date;
     error = false;
     errorMessage = '';
 
@@ -29,21 +31,22 @@ export class MessinchargeComponent implements OnInit {
             username: 'rava' 
         },
         { username: 'onions' },
-        //  },
-        // { username: 'Durga Prasad' }{ username: 'Meher' },
-        // { username: 'manoj' },
-        // { username: 'krishna'
+    ];
+slots: Array<any> = [
+
+        { name: 'Breakfast' },
+        { name: 'Lunch'  },
+        { name: 'Snacks' },
+        { name :'Dinner'},
     ];
 
   ngOnInit() {
-    this.taskForm = this.fb.group({
-      name: ['', Validators.required],
-       quantity: ['', Validators.required],
-       price:['', Validators.required]
-     
-
-
+    this.itemaddForm = this.fb.group({
+      insert_date:['',Validators.required],
+       activeList: this.fb.array([]),
     });
+    
+        this.addactiveList();
     this._apiService.getlist().subscribe(data=>{
     this.data=data;
      console.log(this.data);
@@ -52,7 +55,7 @@ export class MessinchargeComponent implements OnInit {
   }
  addactiveList() {
 
-        const control = <FormArray>this.taskForm.controls['activeList'];
+        const control = <FormArray>this.itemaddForm.controls['activeList'];
         const addrCtrl = this.initLink();
         control.push(addrCtrl);
 
@@ -65,37 +68,65 @@ removeList(i: any)
 {
         console.log(i);
         // this.addmore_length=i;
-        const control = <FormArray>this.taskForm.controls['activeList'];
-        this.rem_length = ((<FormArray>this.taskForm.controls['activeList']).length);
+        const control = <FormArray>this.itemaddForm.controls['activeList'];
+        this.rem_length = ((<FormArray>this.itemaddForm.controls['activeList']).length);
         console.log(this.rem_length);
 
         //const addrCtrl = this.initLink();
-        control.removeAt((<FormArray>this.taskForm.controls['activeList']).length - 1);
+        control.removeAt((<FormArray>this.itemaddForm.controls['activeList']).length - 1);
         this.addmore_length = this.rem_length;
         console.log(this.addmore_length);
 }    
 initLink() {
         return this.fb.group({
              name: ['', Validators.required],
-            task_name: ['', Validators.required],
+            quantity: ['', Validators.required],
             price:['', Validators.required]
+          
         });
     }
     data;
-save() {
-  let val={}
- val['name'] = this.taskForm.value.name;
- val['quantity'] = this.taskForm.value.quantity;
- val['price'] = this.taskForm.value.price;
- console.log(val);
-  this._apiService.insertlist(val).subscribe(data=>{
+insert={};
+itemaddform() {
+
+  this.insert['insert_date'] = this.insert_date;
+    
+    // const p = Object.assign({}, this.insert, this.itemaddForm.value);
+    //         console.log(p);
+    console.log(this.itemaddForm.value);
+  this._apiService.insertlist(this.itemaddForm.value).subscribe(data=>{
     this.data=data;
      console.log(this.data);
-     this.taskForm.reset();
+     this.itemaddForm.reset();
   })
   }
     getuser($event)
     {
       let value=$event.target.value;
     }
+    
+    public myDatePickerOptions2: IMyDpOptions = {
+    // other options...
+    dateFormat: 'yyyy-mm-dd',
+    editableDateField: false,
+    disableWeekends: false,
+
+    //  disableDays: this.service.holidays,
+    disableUntil: { year: 0, month: 0, day: 0 }
+    // disableUntil: {year: , month: 5 , day: 17}
+
+  };
+  picker1day;
+  picker1month;
+  picker1year;
+
+  onDateChanged(event: IMyDateModel) {
+
+    this.insert_date = event.formatted;
+    // this.itemaddForm.patchValue({ insert_date:'insert_date' });
+    // this.itemaddForm.controls['insert_date'];
+    this.myDatePickerOptions2.disableUntil.year = event.date.year
+    this.myDatePickerOptions2.disableUntil.month = event.date.month
+    this.myDatePickerOptions2.disableUntil.day = event.date.day - 1
+  }
 }

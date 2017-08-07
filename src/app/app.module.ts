@@ -26,6 +26,10 @@ import { MessinchargeComponent } from './messincharge/messincharge.component';
 
 
 
+import { MyDatePickerModule } from 'mydatepicker';
+
+
+
 
 @NgModule({
   declarations: [
@@ -50,7 +54,8 @@ import { MessinchargeComponent } from './messincharge/messincharge.component';
     ReactiveFormsModule,
     ToasterModule,
     DatePickerModule,
-    PopupModule.forRoot()
+    PopupModule.forRoot(),
+    MyDatePickerModule
   ],
   providers: [
     AuthGuard,

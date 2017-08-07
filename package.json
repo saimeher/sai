@@ -25,6 +25,7 @@
     "angular2-datatable": "^0.6.0",
     "angular2-toaster": "^4.0.1",
     "core-js": "^2.4.1",
+    "mydatepicker": "^2.0.26",
     "ng2-opd-popup": "^1.1.21",
     "ngx-tooltip": "0.0.9",
     "rxjs": "^5.4.1",
