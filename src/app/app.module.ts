@@ -23,10 +23,14 @@ import { SemesteryComponent } from './semestery/semestery.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ComplaintsComponent } from './complaints/complaints.component';
 import { MessinchargeComponent } from './messincharge/messincharge.component';
+import { MenulistComponent } from './menulist/menulist.component';
+
 
 
 
 import { MyDatePickerModule } from 'mydatepicker';
+import {DataFilterPipe} from './datatable_filter';
+import {  ModalComponent } from './modal.component';
 
 
 
@@ -41,7 +45,11 @@ import { MyDatePickerModule } from 'mydatepicker';
     SemesteryComponent,
     RegistrationComponent,
     ComplaintsComponent,
-    MessinchargeComponent
+    MessinchargeComponent,
+    DataFilterPipe,
+    ModalComponent,
+    MenulistComponent
+    
 
   ],
   imports: [
@@ -55,7 +63,8 @@ import { MyDatePickerModule } from 'mydatepicker';
     ToasterModule,
     DatePickerModule,
     PopupModule.forRoot(),
-    MyDatePickerModule
+    MyDatePickerModule,
+    
   ],
   providers: [
     AuthGuard,

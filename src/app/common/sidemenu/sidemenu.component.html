@@ -53,43 +53,6 @@
                 <i class="fa fa-angle-double-right"></i> Complaints
             </a>
           </li>
-          <!-- <li class="panel">
-            <a [ngClass]="{'active': (page=='registration')}" [routerLink]="['/registration']" data-parent="#side" data-toggle="collapse"
-              class="accordion-toggle collapsed" data-target="#complaints">
-                <i class="fa fa-angle-double-right"></i> Complaints
-            </a>
-            <ul class="nav collapse" id="complaints" style="height: 0px;">
-              <li>
-                <a [ngClass]="{'active': (page=='semestery')}" [routerLink]="['/semestery']">
-                <i class="fa fa-angle-double-right"></i> Semester
-            </a>
-              </li>
-            </ul>
-          </li> -->
-
-
-          <!-- <style>
-            .menu-bg {
-              background-color: rgb(236, 240, 241);
-            }
-
-            .menu-bg>li {
-              list-style-type: none;
-            }
-
-            .menu-bg>li>a {
-              text-decoration: none;
-            }
-          </style>
-
-          <li data-toggle="collapse" data-target="#new" class="collapsed">
-            <a><i class="fa fa-angle-double-right"></i> Complaints <span class="fa fa-caret-down"></span></a>
-            <ul class="sub-menu collapse menu-bg" id="new">
-              <li><a><i class="fa fa-angle-double-right"></i>Hostel</a></li>
-              <li><a><i class="fa fa-angle-double-right"></i>Mess</a></li>
-              <li><a><i class="fa fa-angle-double-right"></i>Facilities</a></li>
-            </ul>
-          </li> -->
 
           <!-- <li>
             <a href="morris.html">
@@ -108,8 +71,12 @@
                 <i class="fa fa-angle-double-right"></i> MessIncharge
             </a>
           </li>
-         
-          
+          <li>
+            <a [ngClass]="{'active': (page=='menulist')}" [routerLink]="['/menulist']">
+                <i class="fa fa-angle-double-right"></i> MenuList
+            </a>
+          </li>
+
         </ul>
       </li>
       <!--  <li>

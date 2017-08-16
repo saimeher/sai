@@ -32,7 +32,7 @@ export class AuthenticationService {
           localStorage.setItem('utype', user.utype);
           localStorage.setItem('uid', user.uid);
           localStorage.setItem('reg_no',user.reg_no);
-           localStorage.setItem('dp', user.dp);
+          localStorage.setItem('dp', user.dp);
           localStorage.setItem('gender',user.gender);
           this.userLoggedIn = true;
         } else {

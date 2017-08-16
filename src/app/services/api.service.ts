@@ -51,6 +51,12 @@ export class ApiService {
   insertlist(data) {
     return this.callApi(AppSettings.INSERTLIST_API, 'post', data);
   }
+  itemoutlist(data) {
+    return this.callApi(AppSettings.ITEMOUTLIST_API, 'post', data);
+  }
+  addnewitem(data) {
+    return this.callApi(AppSettings.ADDNEWITEM_API, 'post', data);
+  }
  
 
   // responsible for making api calls

@@ -6,6 +6,8 @@ import { SemesteryComponent } from './semestery/semestery.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ComplaintsComponent } from './complaints/complaints.component';
 import {MessinchargeComponent} from './messincharge/messincharge.component';
+import { MenulistComponent } from './menulist/menulist.component';
+
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -14,6 +16,7 @@ const appRoutes: Routes = [
     { path: 'dashboard/:page', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'complaints', component: ComplaintsComponent, canActivate: [AuthGuard] },
     {  path: 'messincharg', component: MessinchargeComponent, canActivate: [AuthGuard] },
+    {path: 'menulist', component:MenulistComponent,canActivate:[AuthGuard]},
     { path: '', redirectTo: "login", pathMatch: "full" },
     { path: '**', redirectTo: 'dashboard', pathMatch: "full" }
 ];
