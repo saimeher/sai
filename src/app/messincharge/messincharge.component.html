@@ -47,33 +47,38 @@
             </li>
             <li class=""><a href="#stock" data-toggle="tab">Stock Register</a>
             </li>
+            <li class=""><a href="#balance" data-toggle="tab">Stock Balance</a>
+            </li>
           </ul>
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="in">
               <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm">
-                 <!-- <div formArrayName="activeList" class="form-body"> -->
+                <!-- <div formArrayName="activeList" class="form-body"> -->
                 <div class="form-horizontal">
                   <div class="form-group">
                     <div class="row">
-                         <label class="control-label col-md-1">Date</label>
+                      <label class="control-label col-md-1">Date</label>
                       <div class="col-md-2">
-                        <my-date-picker locale="en" #start formControlName="insert_date" name="insert_date" placeholder="YYYY-MM-DD"
-                          [options]="myDatePickerOptions" (dateChanged)="onDateChanged($event)"></my-date-picker>
+                        <my-date-picker locale="en" #start formControlName="insert_date" name="insert_date" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
+                          (dateChanged)="onDateChanged($event)"></my-date-picker>
                       </div>
-                       <button (click)="addnewitem()" type="button" style="margin-left:10px" class="btn btn-blue pull-left btn-square">Add new</button>
-                      </div>
-                      </div>
+                      <button (click)="addnewitem()" type="button" style="margin-left:10px" class="btn btn-blue pull-left btn-square">Add new</button>
+                    </div>
+                  </div>
                   <div class="form-group">
                     <div class="col-md-3">
                       <label>Item</label>
                     </div>
                     <div class="col-md-2">
-                      <label>Quantity in kgs</label>
+                      <label>Quantity</label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Units</label>
                     </div>
                     <div class="col-md-2">
                       <label>Price</label>
                     </div>
-                    
+
                   </div>
                 </div>
                 <!-- <div formArrayName="activeList" class="form-body"> -->
@@ -85,25 +90,38 @@
 
                           <select class="form-control" formControlName="name" name="name">
                         <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}</option>
-                        <!-- <option value="add">Add new item</option> -->
+                        <!--<option *ngFor="let key of objectKeys(data1)" value="{{it.mid}}">{{key + ' : ' + data1[key]}}</option>-->
                       </select>
                         </div>
                         <div class="col-md-2">
 
                           <input type="text" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
                         </div>
+                        <div class="col-md-2">
+
+                          <select class="form-control" formControlName="units" name="units">
+                           <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>
+                                        
+                          </select>
+                        </div>
 
                         <div class="col-md-2">
 
                           <input type="text" name="price" class="form-control" value="price" formControlName="price" />
                         </div>
-                        
 
-                        <div class="row">
-                          <button (click)="addactiveList()" type="button" style="margin-right:90px" class="btn btn-green pull-right btn-square">Add More</button>
-                          <div class="row" *ngIf="addmore_length>1">
-                            <button (click)="removeList(addmore_length)" type="button" style="margin-right:10px" class="btn btn-danger pull-right btn-square">Remove</button>
-                          </div>
+                        <!-- <div class="col-md-2">
+
+                          <input type="text" class="form-control" name="total" value="total" formControlName="total" />
+                        </div> -->
+
+
+                        <div class="col-md-3">
+
+                          <button *ngIf="p > 0 " (click)="removeList(p)" type="button" style="margin-right:10px" class="btn btn-danger pull-right btn-square">Remove</button>
+
+                          <button (click)="addactiveList()" type="button" style="margin-right:10px" class="btn btn-green pull-right btn-square">{{p}}Add More</button>
+
                         </div>
                       </div>
                     </div>
@@ -119,18 +137,18 @@
             </div>
 
             <div class="tab-pane fade" id="out">
-               <form (ngSubmit)="itemoutform()" method="post" [formGroup]="itemoutForm">
+              <form (ngSubmit)="itemoutform()" method="post" [formGroup]="itemoutForm">
                 <div class="form-horizontal">
                   <div class="form-group">
                     <div class="row">
                       <label class="control-label col-md-1">Date</label>
                       <div class="col-md-2">
-                        <my-date-picker locale="en"  formControlName="out_date" name="out_date"  name="out" placeholder="YYYY-MM-DD" required
-                          [options]="myDatePickerOptions" (dateChanged)="onDateChanged2($event)"></my-date-picker>
+                        <my-date-picker locale="en" formControlName="out_date" name="out_date" placeholder="YYYY-MM-DD" required [options]="myDatePickerOptions"
+                          (dateChanged)="onDateChanged2($event)"></my-date-picker>
                       </div>
-                         <label class="control-label col-md-1">Slot</label>
+                      <label class="control-label col-md-1">Slot</label>
                       <div class="col-md-2">
-                       <select class="form-control" formControlName="slot" name="slot">
+                        <select class="form-control" formControlName="slot" name="slot">
                         <option *ngFor="let user of slots" value="{{user.name}}">{{user.name}}</option>
                       </select>
                       </div>
@@ -140,13 +158,16 @@
                     <div class="col-md-3">
                       <label>Item</label>
                     </div>
-                    <div class="col-md-2">
-                      <label>Quantity in kgs</label>
+                    <div class="col-md-3">
+                      <label>Quantity</label>
                     </div>
-                  
+                    <div class="col-md-3">
+                      <label>Units</label>
+                    </div>
+
                   </div>
                 </div>
-                
+
                 <div *ngFor="let numbersActivities1 of itemoutForm.controls.activeList1['controls'];let p=index;" class="">
                   <div [formGroup]="itemoutForm.controls.activeList1.controls[p]">
                     <div class="form-horizontal">
@@ -161,169 +182,199 @@
 
                           <input type="text" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
                         </div>
-                        <div class="row">
-                          <button (click)="addactiveList1()" type="button" style="margin-right:90px" class="btn btn-green pull-right btn-square">Add More</button>
-                          <div class="row" *ngIf="addmore_length>1">
-                            <button (click)="removeList1(addmore_length)" type="button" style="margin-right:10px" class="btn btn-danger pull-right btn-square">Remove</button>
+                        <div class="col-md-2">
+
+                          <select class="form-control" formControlName="units" name="units">
+                            <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
+                          </select>
+                        </div>
+                          <div class="col-md-4">
+                            <button *ngIf="p > 0 " (click)="removeList1(addmore_length)" type="button" style="margin-right:10px" class="btn btn-danger btn-square">Remove</button>
+                            <button (click)="addactiveList1()" type="button" style="margin-right:90px" class="btn btn-green pull-right btn-square">Add More</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
-                  <button type="submit" [disabled] ="!itemoutForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
-                    <!-- <button type="submit" [disabled]="!itemaddForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button> -->
-                  </div>
-                </div>
-               
-              </form> 
-              
-            </div> 
-
-            <div class="tab-pane fade" id="stock">
-              <div class="portlet portlet-default">
-                <div class="portlet-heading">
-                  <div class="portlet-title">
-                    <h4>stock Register</h4>
-                  </div>
-                  <!-- <div class="portlet-widgets">
-                    <a (click)="showAddForm()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Add Issue</a>
-                  </div> -->
-                  <div class="clearfix"></div>
-                </div>
-                <div class="portlet-body">
-                  <div class="form-horizontal">
-                    <div class="form-group">
-                      <div class="col-md-3">
-                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
-                      </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <button type="submit" [disabled]="!itemoutForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
+                      <!-- <button type="submit" [disabled]="!itemaddForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button> -->
                     </div>
                   </div>
-                <div class="row">
-                <div class="col-md-12 tabel_overflow">
-                  <!--<table class="table table-green table-bordered table-hover">-->
-                  <table class="table table-bordered table-green" [mfData]="data | dataFilter:filterQuery" #mf="mfDataTable"
-                    [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
-                      <thead>
-                        <tr>
-                          <th>
-                            <mfDefaultSorter by="insert_dt">Add Date</mfDefaultSorter>
-                          </th>
-                          <th>
-                            <mfDefaultSorter by="domain">Domain</mfDefaultSorter>
-                          </th>
 
-                          <th>
-                            <mfDefaultSorter by="location">Location</mfDefaultSorter>
-                          </th>
-                          <th>
-                            <mfDefaultSorter by="problem">Problem</mfDefaultSorter>
-                          </th>
-                          <th>
-                            <mfDefaultSorter by="issue_desc">Issue</mfDefaultSorter>
-                          </th>
-                        <th nowrap>
-                              Details if Edited
-                            </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>sai</td>
-                          <td>sai</td>
-                          <td>sai</td>
-                          <td>sai</td>
-                          <td>sai</td>
-                        <!-- <tr *ngFor="let item of mf.data; let i=index;"> -->
-                          <!-- <td nowrap>{{item.insert_dt | date: 'dd-MM-yyyy'}}</td>
-                          <td>{{item.domain|titlecase}}</td>
+              </form>
 
-                          <td>{{item.location}}</td>
-                          <td>{{item.problem}}</td>
-                          <td>{{item.issue_desc}}</td>
-                          <td nowrap>{{item.repaired_on | date: 'dd-MM-yyyy'}}</td>
-                          <td>{{item.priority}}</td>
+              </div>
 
-                         
-                          <td nowrap *ngIf="item.status=='pending'"><span class="badge blue" style="margin: 0px 40px 0px 2px;">Pending</span></td>
-                          <td nowrap *ngIf="item.status=='verified_resolved'"><span class="badge green" style="margin: 0px 40px 0px 2px;">Verified Resolved</span></td>
-                          <td nowrap *ngIf="item.status=='resolution_in_progress'"><span class="badge orange" style="margin: 0px 40px 0px 2px;">Resolution in Progress</span></td>
-                          <td nowrap *ngIf="item.status=='cannot_be_resolved'"><span class="badge red" style="margin: 0px 40px 0px 2px;"> Cannot be Resolved </span></td>
-                          <td nowrap *ngIf="item.status=='user_deleted'"><span class="badge red" style="margin: 0px 40px 0px 2px;">User Deleted</span></td>
-                          <td nowrap *ngIf="item.status=='onhold'"><span class="badge red" style="margin: 0px 40px 0px 2px;">On Hold</span></td>
-                          <td nowrap *ngIf="item.status=='assigned'"><span class="badge orange" style="margin: 0px 40px 0px 2px;">Assigned</span></td>
-                          <td nowrap *ngIf="item.status=='user_resolved'"><span class="badge green" style="margin: 0px 40px 0px 2px;">User Resolved</span></td>
-                          
-                          
+              <div class="tab-pane fade" id="stock">
+                <div class="portlet portlet-default">
+                  <div class="portlet-heading">
+                    <div class="portlet-title">
+                      <h4>Stock Register</h4>
+                    </div>
+                    <!-- <div class="portlet-widgets">
+                    <a (click)="showAddForm()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Add Issue</a>
+                  </div> -->
+                    <div class="clearfix"></div>
+                  </div>
+                  <div *ngIf="stock_data" class="portlet-body">
+                    <div class="form-horizontal">
+                      <div class="form-group">
+                        <div class="col-md-3">
+                          <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 tabel_overflow">
+                        <!--<table class="table table-green table-bordered table-hover">-->
+                        <table class="table table-bordered table-green" [mfData]="stock_data" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy"
+                          [(mfSortOrder)]="sortOrder">
+                          <thead>
+                            <tr>
+                              <th>
+                                <mfDefaultSorter by="edate">S.NO</mfDefaultSorter>
+                              </th>
+                              <th>
+                                <mfDefaultSorter by="insert_dt">Add Date</mfDefaultSorter>
+                              </th>
+                              <th>
+                                <mfDefaultSorter by="item_name">Item Name</mfDefaultSorter>
+                              </th>
+                              <th>
+                                <mfDefaultSorter by="trans_type">Item Added Type</mfDefaultSorter>
+                              </th>
+                              <th>
+                                <mfDefaultSorter by="quantity">Quantity</mfDefaultSorter>
+                              </th>
+                              <th>
+                                <mfDefaultSorter by="price">Price</mfDefaultSorter>
+                              </th>
 
-                          <td *ngIf="item.days <= 0  && item.status == 'pending'" style="text-align: center;" >{{-(item.day)}} </td>
-                          <td *ngIf="item.days <= 0  && item.status == 'verified_resolved'" style="text-align: center;">{{-(item.days)}}</td>
-                          <td *ngIf="item.days <= 0  && item.status == 'resolution_in_progress'" style="text-align: center;">{{-(item.day)}}</td>
-                          <td *ngIf="item.days <= 0  && item.status == 'cannot_be_resolved'" style="text-align: center;">{{-(item.days)}}</td>
-                          <td *ngIf="item.days <= 0  && item.status == 'user_deleted'"></td>
-                          <td *ngIf="item.days <= 0  && item.status == 'onhold'" style="text-align: center;">{{-(item.day)}}</td>
-                          <td *ngIf="item.days <= 0  && item.status == 'assigned'" style="text-align: center;">{{-(item.day)}} </td>
-                          <td *ngIf="item.days <= 0  && item.status == 'user_resolved'" style="text-align: center;">{{-(item.days)}}</td>
-                          <td> <a *ngIf="item.img_name" (click)="getImagesbyId(item.did,item.reg_no)"> View </a> </td>
-                          <td nowrap>
-                            <a class="btn btn-info btn-xs btn-square" (click)="details(item)" style="margin-right: 5px; width: 50px;">Edit</a>
-                            <a class="btn btn-danger btn-xs btn-square" (click)="delete(item)">Delete</a>
-                          </td> -->
-                        </tr>
-                      </tbody>
-                      <tbody *ngIf="mf.data.length == 0">
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of mf.data; let i=index;">
+                              <td>{{i+1}}</td>
+                              <td>{{item.insert_dt}}</td>
+                              <td>{{item.item_name}}</td>
+                              <td>{{item.trans_type}}</td>
+                              <td>{{item.quantity}}</td>
+                              <td>{{item.price}}</td>
+
+
+                            </tr>
+                          </tbody>
+                          <!--<tbody *ngIf="mf.data.length == 0">
                         <tr rowspan="2">
                           <td colspan="12">
                             <h4 *ngIf="mf.data.length == 0" class="text-center"> No Data found</h4>
                           </td>
                         </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <td colspan="12">
-                            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
-                          </td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
+                      </tbody>-->
+                          <tfoot>
+                            <tr>
+                              <td colspan="12">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div> 
-            
-           </div>
 
-          <div class="clearfix"></div>
-        </div>
-      </div>
-      <!-- end DASHBOARD CIRCLE TILES -->
-    </div>
-    <!-- /.page-content -->
-  </div>
-  <!-- /#page-wrapper -->
-  <!-- end MAIN PAGE CONTENT -->
-</div>
+              <div class="tab-pane fade" id="balance">
+                <div class="portlet portlet-default">
+                  <div class="portlet-heading">
+                    <div class="portlet-title">
+                      <h4>Stock Balance</h4>
+                    </div>
+
+                    <div class="clearfix"></div>
+                  </div>
+                  <div *ngIf="stock_balance" class="portlet-body">
+                    <div class="form-horizontal">
+                      <div class="form-group">
+                        <div class="col-md-3">
+                          <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 tabel_overflow">
+
+                        <table class="table table-bordered table-green" [mfData]="stock_balance" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy"
+                          [(mfSortOrder)]="sortOrder">
+                          <thead>
+                            <tr>
+                              <th>
+                                <mfDefaultSorter by="">S.NO</mfDefaultSorter>
+                              </th>
+
+                              <th>
+                                <mfDefaultSorter by="item">Item Name</mfDefaultSorter>
+                              </th>
 
 
+                              <th>
+                                <mfDefaultSorter by="total_balance">Balance</mfDefaultSorter>
+                              </th>
 
-<app-modal #modal1>
-  <div class="app-modal-header">
-    <h4 style="color:black">
-      Add New item <a data-dismiss="modal" class="pull-right" (click)="close()">x</a>
-    </h4>
-  </div>
-  <div class="app-modal-body">
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let items of mf.data; let i=index;">
+                              <td>{{i+1}}</td>
+                              <td>{{items.item}}</td>
+                              <td>{{items.total_balance}}</td>
+                            </tr>
+                          </tbody>
 
-            <label class="col-sm-4 control-label">Item</label>
-            <div class="col-sm-4">
-              <input type="text" name="item"  [(ngModel)]="item" required/>
+                          <tfoot>
+                            <tr>
+                              <td colspan="12">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-     
+
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <!-- end DASHBOARD CIRCLE TILES -->
+      </div>
+      <!-- /.page-content -->
     </div>
-   <div class="app-modal-footer" style="margin-top: 10px;">
-      <button type="button" class="btn btn-default btn-square" (click)="submit();">Submit</button>
+    <!-- /#page-wrapper -->
+    <!-- end MAIN PAGE CONTENT -->
   </div>
-</app-modal>
+
+  <app-modal #modal1>
+    <div class="app-modal-header">
+      <h4 style="color:black">
+        Add New item <a data-dismiss="modal" class="pull-right" (click)="close()">x</a>
+      </h4>
+    </div>
+    <div class="app-modal-body">
+
+      <label class="col-sm-4 control-label">Item</label>
+      <div class="col-sm-4">
+        <input type="text" name="item" [(ngModel)]="item" required/>
+      </div>
+
+    </div>
+    <div class="app-modal-footer" style="margin-top: 10px;">
+      <button type="button" class="btn btn-default btn-square" (click)="submit();">Submit</button>
+    </div>
+  </app-modal>

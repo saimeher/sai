@@ -57,6 +57,26 @@ export class ApiService {
   addnewitem(data) {
     return this.callApi(AppSettings.ADDNEWITEM_API, 'post', data);
   }
+  menulist(data) {
+    return this.callApi(AppSettings.MENULIST_API, 'post', data);
+  }
+  getmenulist()
+  {
+     const body = {}
+    return this.callApi(AppSettings.GETMENULIST_API,'get',body);
+  }
+  updatelist(data) {
+    return this.callApi(AppSettings.UPDATELIST_API, 'post', data);
+  }
+
+  stockRegister(){
+    const body = {}
+    return this.callApi(AppSettings.STOCKREGISTER_API, 'get', body);
+  }
+   stockBalance(){
+    const body = {}
+    return this.callApi(AppSettings.STOCKBALANCE_API, 'get', body);
+  }
  
 
   // responsible for making api calls
