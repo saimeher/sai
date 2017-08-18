@@ -1,3 +1,4 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
 <div id="wrapper">
   <!-- begin TOP NAVIGATION -->
   <app-header></app-header>
@@ -52,6 +53,7 @@
           </ul>
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="in">
+
               <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm">
                 <!-- <div formArrayName="activeList" class="form-body"> -->
                 <div class="form-horizontal">
@@ -74,6 +76,9 @@
                     </div>
                     <div class="col-md-2">
                       <label>Units</label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Receipt No</label>
                     </div>
                     <div class="col-md-2">
                       <label>Price</label>
@@ -104,18 +109,15 @@
                                         
                           </select>
                         </div>
+                        <div class="col-md-2">
+
+                          <input type="number" name="receipt_no" class="form-control" value="receipt_no" formControlName="receipt_no" />
+                        </div>
 
                         <div class="col-md-2">
 
                           <input type="text" name="price" class="form-control" value="price" formControlName="price" />
                         </div>
-
-                        <!-- <div class="col-md-2">
-
-                          <input type="text" class="form-control" name="total" value="total" formControlName="total" />
-                        </div> -->
-
-
                         <div class="col-md-3">
 
                           <button *ngIf="p > 0 " (click)="removeList(p)" type="button" style="margin-right:10px" class="btn btn-danger pull-right btn-square">Remove</button>
@@ -134,16 +136,21 @@
                 </div>
                 <!-- </div> -->
               </form>
+
             </div>
 
             <div class="tab-pane fade" id="out">
+                <!-- <div *ngIf="error" class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close"></a> {{errorMessage}}
+                </div> -->
+
               <form (ngSubmit)="itemoutform()" method="post" [formGroup]="itemoutForm">
                 <div class="form-horizontal">
                   <div class="form-group">
                     <div class="row">
                       <label class="control-label col-md-1">Date</label>
                       <div class="col-md-2">
-                        <my-date-picker locale="en" formControlName="out_date" name="out_date" placeholder="YYYY-MM-DD" required [options]="myDatePickerOptions"
+                        <my-date-picker locale="en" formControlName="out_date" name="out_date" placeholder="YYYY-MM-DD" required [options]="myDatePickerOptions2"
                           (dateChanged)="onDateChanged2($event)"></my-date-picker>
                       </div>
                       <label class="control-label col-md-1">Slot</label>
@@ -188,193 +195,204 @@
                             <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
                           </select>
                         </div>
-                          <div class="col-md-4">
-                            <button *ngIf="p > 0 " (click)="removeList1(addmore_length)" type="button" style="margin-right:10px" class="btn btn-danger btn-square">Remove</button>
-                            <button (click)="addactiveList1()" type="button" style="margin-right:90px" class="btn btn-green pull-right btn-square">Add More</button>
-                          </div>
+                        <div class="col-md-4">
+                          <button *ngIf="p > 0 " (click)="removeList1(addmore_length)" type="button" style="margin-right:10px" class="btn btn-danger btn-square">Remove</button>
+                          <button (click)="addactiveList1()" type="button" style="margin-right:90px" class="btn btn-green pull-right btn-square">Add More</button>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <button type="submit" [disabled]="!itemoutForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
+                    <!-- <button type="submit" [disabled]="!itemaddForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button> -->
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+
+            <div class="tab-pane fade" id="stock">
+              <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                  <div class="portlet-title">
+                    <h4>Stock Register</h4>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+                <div *ngIf="stock_data" class="portlet-body">
+                  <div class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <input class="form-control" [(ngModel)]="filterQuery1" placeholder="Search" />
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-2">
-                      <button type="submit" [disabled]="!itemoutForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
-                      <!-- <button type="submit" [disabled]="!itemaddForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button> -->
-                    </div>
-                  </div>
+                    <div class="col-md-12 tabel_overflow">
+                      <!--<table class="table table-green table-bordered table-hover">-->
+                      <table class="table table-bordered table-green" [mfData]="stock_data | dataFilter : filterQuery1" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                          <tr>
+                            <th>
+                              <mfDefaultSorter by="edate">S.NO</mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="insert_dt">Transaction Date</mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="item_name">Item Name</mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="trans_type">Item Added Type</mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="quantity">Quantity</mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="price">Price</mfDefaultSorter>
+                            </th>
 
-              </form>
-
-              </div>
-
-              <div class="tab-pane fade" id="stock">
-                <div class="portlet portlet-default">
-                  <div class="portlet-heading">
-                    <div class="portlet-title">
-                      <h4>Stock Register</h4>
-                    </div>
-                    <!-- <div class="portlet-widgets">
-                    <a (click)="showAddForm()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Add Issue</a>
-                  </div> -->
-                    <div class="clearfix"></div>
-                  </div>
-                  <div *ngIf="stock_data" class="portlet-body">
-                    <div class="form-horizontal">
-                      <div class="form-group">
-                        <div class="col-md-3">
-                          <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 tabel_overflow">
-                        <!--<table class="table table-green table-bordered table-hover">-->
-                        <table class="table table-bordered table-green" [mfData]="stock_data" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy"
-                          [(mfSortOrder)]="sortOrder">
-                          <thead>
-                            <tr>
-                              <th>
-                                <mfDefaultSorter by="edate">S.NO</mfDefaultSorter>
-                              </th>
-                              <th>
-                                <mfDefaultSorter by="insert_dt">Add Date</mfDefaultSorter>
-                              </th>
-                              <th>
-                                <mfDefaultSorter by="item_name">Item Name</mfDefaultSorter>
-                              </th>
-                              <th>
-                                <mfDefaultSorter by="trans_type">Item Added Type</mfDefaultSorter>
-                              </th>
-                              <th>
-                                <mfDefaultSorter by="quantity">Quantity</mfDefaultSorter>
-                              </th>
-                              <th>
-                                <mfDefaultSorter by="price">Price</mfDefaultSorter>
-                              </th>
-
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let item of mf.data; let i=index;">
-                              <td>{{i+1}}</td>
-                              <td>{{item.insert_dt}}</td>
-                              <td>{{item.item_name}}</td>
-                              <td>{{item.trans_type}}</td>
-                              <td>{{item.quantity}}</td>
-                              <td>{{item.price}}</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of mf.data; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{item.edate}}</td>
+                            <td>{{item.item_name}}</td>
+                            <td>{{item.trans_type}}</td>
+                            <td>{{item.quantity}}</td>
+                            <td>{{item.price}}</td>
 
 
-                            </tr>
-                          </tbody>
-                          <!--<tbody *ngIf="mf.data.length == 0">
+                          </tr>
+                        </tbody>
+                        <!--<tbody *ngIf="mf.data.length == 0">
                         <tr rowspan="2">
                           <td colspan="12">
                             <h4 *ngIf="mf.data.length == 0" class="text-center"> No Data found</h4>
                           </td>
                         </tr>
                       </tbody>-->
-                          <tfoot>
-                            <tr>
-                              <td colspan="12">
-                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
-                              </td>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="tab-pane fade" id="balance">
-                <div class="portlet portlet-default">
-                  <div class="portlet-heading">
-                    <div class="portlet-title">
-                      <h4>Stock Balance</h4>
-                    </div>
-
-                    <div class="clearfix"></div>
-                  </div>
-                  <div *ngIf="stock_balance" class="portlet-body">
-                    <div class="form-horizontal">
-                      <div class="form-group">
-                        <div class="col-md-3">
-                          <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 tabel_overflow">
-
-                        <table class="table table-bordered table-green" [mfData]="stock_balance" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy"
-                          [(mfSortOrder)]="sortOrder">
-                          <thead>
-                            <tr>
-                              <th>
-                                <mfDefaultSorter by="">S.NO</mfDefaultSorter>
-                              </th>
-
-                              <th>
-                                <mfDefaultSorter by="item">Item Name</mfDefaultSorter>
-                              </th>
-
-
-                              <th>
-                                <mfDefaultSorter by="total_balance">Balance</mfDefaultSorter>
-                              </th>
-
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let items of mf.data; let i=index;">
-                              <td>{{i+1}}</td>
-                              <td>{{items.item}}</td>
-                              <td>{{items.total_balance}}</td>
-                            </tr>
-                          </tbody>
-
-                          <tfoot>
-                            <tr>
-                              <td colspan="12">
-                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
-                              </td>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
+                        <tfoot>
+                          <tr>
+                            <td colspan="12">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="clearfix"></div>
+            <div class="tab-pane fade" id="balance">
+              <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                  <div class="portlet-title">
+                    <h4>Stock Balance</h4>
+                  </div>
+
+                  <div class="clearfix"></div>
+                </div>
+                <div *ngIf="stock_balance" class="portlet-body">
+                  <div class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 tabel_overflow">
+
+                      <table class="table table-bordered table-green" [mfData]="stock_balance | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                          <tr>
+                            <th>
+                              <mfDefaultSorter by="">S.NO</mfDefaultSorter>
+                            </th>
+
+                            <th>
+                              <mfDefaultSorter by="item">Item Name</mfDefaultSorter>
+                            </th>
+
+
+                            <th>
+                              <mfDefaultSorter by="total_balance">Balance</mfDefaultSorter>
+                            </th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let items of mf.data; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{items.item}}</td>
+                            <td>{{items.total_balance}}</td>
+                          </tr>
+                        </tbody>
+
+                        <tfoot>
+                          <tr>
+                            <td colspan="12">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div class="clearfix"></div>
         </div>
-        <!-- end DASHBOARD CIRCLE TILES -->
       </div>
-      <!-- /.page-content -->
+      <!-- end DASHBOARD CIRCLE TILES -->
     </div>
-    <!-- /#page-wrapper -->
-    <!-- end MAIN PAGE CONTENT -->
+    <!-- /.page-content -->
   </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
+</div>
 
-  <app-modal #modal1>
-    <div class="app-modal-header">
-      <h4 style="color:black">
-        Add New item <a data-dismiss="modal" class="pull-right" (click)="close()">x</a>
-      </h4>
+<app-modal #modal1>
+  <div class="app-modal-header">
+    <h4 style="color:black">
+      Add New item <a data-dismiss="modal" class="pull-right" (click)="close()">x</a>
+    </h4>
+  </div>
+  <div class="app-modal-body">
+
+    <label class="col-sm-4 control-label">Item</label>
+    <div class="col-sm-4">
+      <input type="text" name="item" [(ngModel)]="item" required/>
     </div>
-    <div class="app-modal-body">
 
-      <label class="col-sm-4 control-label">Item</label>
-      <div class="col-sm-4">
-        <input type="text" name="item" [(ngModel)]="item" required/>
+  </div>
+  <div class="app-modal-footer" style="margin-top: 10px;">
+    <button type="button" class="btn btn-default btn-square" (click)="submit();">Submit</button>
+  </div>
+</app-modal>
+<popup #popup2 (confirmClick)="ok()">
+    <div>
+      <div>
+        <div>
+          <h4>Stock insufficient</h4>
+        </div>
+        <div class="alert alert-danger " role="alert ">stock is less than you insert. Please check once and Apply!</div>
       </div>
-
+      <div>
+        <button class="btn btn-primary pull-right" (click)="ok()">Ok</button>
+      </div>
+      <br>
     </div>
-    <div class="app-modal-footer" style="margin-top: 10px;">
-      <button type="button" class="btn btn-default btn-square" (click)="submit();">Submit</button>
-    </div>
-  </app-modal>
+</popup>

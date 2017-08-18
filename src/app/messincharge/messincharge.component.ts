@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { ModalComponent } from '../modal.component';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControlName } from '@angular/forms';
 import { IMyOptions, IMyDateModel, IMyDpOptions } from 'mydatepicker';
+import { ToasterContainerComponent, ToasterService, ToasterConfig, Toast } from 'angular2-toaster';
 
 
 @Component({
@@ -33,9 +34,21 @@ export class MessinchargeComponent implements OnInit {
   data;
   insert = {};
   item;
+  todaydate=new Date();
+  public toasterconfig: ToasterConfig = 
+  new ToasterConfig({
+
+      // showCloseButton: true,
+      // tapToDismiss   : true,
+      timeout        : 5000
+
+  });
+  public toasterService: ToasterService;
   @ViewChild('modal1') modal1: ModalComponent;
+  @ViewChild('popup2') popup2: Popup;
   // public data;
   public filterQuery = "";
+  public filterQuery1 = "";
   public rowsOnPage = 10;
   public sortBy = "name";
   public sortOrder = "asc";
@@ -43,9 +56,11 @@ export class MessinchargeComponent implements OnInit {
   constructor(private _router: Router,
     private _route: ActivatedRoute,
     private _apiService: ApiService,
-    public fb: FormBuilder, ) {
-
-  };
+    public fb: FormBuilder,
+    toasterService: ToasterService)
+     {
+      this.toasterService = toasterService;
+     };
 
   slots: Array<any> = [
 
@@ -61,6 +76,7 @@ export class MessinchargeComponent implements OnInit {
         { u: 'packets'},
         { u: 'gms'},
       ];
+      
 
   ngOnInit() {
     this.itemaddForm = this.fb.group({
@@ -108,10 +124,29 @@ export class MessinchargeComponent implements OnInit {
       name: ['', Validators.required],
       quantity: ['', Validators.required],
       units:['',Validators.required],
-      price: ['', Validators.required]
+      receipt_no:['',Validators.required],
+      price: ['', Validators.required],
 
     });
   }
+
+  // itemaddform() {
+  //   // this.insert['insert_date'] = this.insert_date;
+  //   this.insert['type'] = "IN";
+  //   this.insert['reg_no'] = localStorage.getItem('reg_no');
+  //   // this.mid['mid'] = it.mid;
+  //   const p = Object.assign({}, this.insert, this.itemaddForm.value);
+  //   console.log(p);
+
+  //   console.log(this.itemaddForm.value);
+  //   this._apiService.insertlist(p).subscribe(data => {
+  //     this.data = data;
+  //     console.log(this.data);
+  //     this.itemaddForm.reset();
+  //     this.stockBalance();
+  //     this.stockRegister();
+  //   })
+  // }
 
   itemaddform() {
     // this.insert['insert_date'] = this.insert_date;
@@ -123,13 +158,32 @@ export class MessinchargeComponent implements OnInit {
 
     console.log(this.itemaddForm.value);
     this._apiService.insertlist(p).subscribe(data => {
-      this.data = data;
-      console.log(this.data);
-      this.itemaddForm.reset();
-      this.stockBalance();
-      this.stockRegister();
-    })
+
+      this.onSaveComplete(data)
+    },
+    (error: any) => this.errorMessage = <any>error
+  );
   }
+  onSaveComplete(data): void {
+    console.log(data);
+    
+    if (!data.success)
+    {
+        console.error('Savign failed');
+        this.error = true;
+        this.errorMessage = data.error;
+    }
+     else 
+    {
+        console.log('Saving successful');
+        this.popToast();
+        this.itemaddForm.reset();
+        this.stockBalance();
+        this.stockRegister();
+       //  this._router.navigate(['/dashboard/timesheet-list']);  
+    }
+
+}
 
   addactiveList1() {
 
@@ -157,7 +211,29 @@ export class MessinchargeComponent implements OnInit {
     });
   }
 
-  itemoutform() {
+  // itemoutform() {
+  //   this.insert['type'] = "Out"
+  //   this.insert['reg_no'] = localStorage.getItem('reg_no');
+  //   console.log(this.itemoutForm.value, this.insert)
+  //   const p = Object.assign({}, this.insert, this.itemoutForm.value);
+  //   console.log(p);
+
+  //   this._apiService.itemoutlist(p).subscribe(data => {
+  //     this.data = data;
+  //     this.popToast();
+  //     this.itemoutForm.reset();
+  //     this.stockBalance();
+  //     this.stockRegister();
+  //   });
+  // }
+  
+
+   itemoutform() {
+
+  //   if (!this.itemoutForm.valid) {
+  //     this.error = true;
+  //     this.errorMessage = 'Please enter data for all mandatory fields';
+  //  }
     this.insert['type'] = "Out"
     this.insert['reg_no'] = localStorage.getItem('reg_no');
     console.log(this.itemoutForm.value, this.insert)
@@ -165,19 +241,42 @@ export class MessinchargeComponent implements OnInit {
     console.log(p);
 
     this._apiService.itemoutlist(p).subscribe(data => {
-      this.data = data;
-      this.itemoutForm.reset();
-      this.stockBalance();
-      this.stockRegister();
-    });
-  }
+      
+      this.outForm(data)
+    },
+    (error: any) => this.errorMessage = <any>error
+    );
+    }
 
+   outForm(data): void {
+    console.log(data);
+    
+    if (!data.data.success)
+    {
+        console.error('Saving failed');
+         this.goPopup2();
+        //  this.popToast1();
+        this.error = true;
+        this.errorMessage = data.error;
+    }
+     else 
+    {
+        console.log('Saving successful');
+        this.popToast();
+        this.itemoutForm.reset();
+        this.stockBalance();
+        this.stockRegister(); 
+    }
+
+}
 
   public myDatePickerOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'yyyy-mmm-dd',
     editableDateField: false,
     disableWeekends: false,
+    disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth()+1, day: this.todaydate.getDate()+1 }
+
   };
 
   public myDatePickerOptions2: IMyDpOptions = {
@@ -185,18 +284,19 @@ export class MessinchargeComponent implements OnInit {
     dateFormat: 'yyyy-mmm-dd',
     editableDateField: false,
     disableWeekends: false,
-    disableUntil: { year: 0, month: 0, day: 0 }
+    disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth()+1, day: this.todaydate.getDate()+1 }
   };
   picker1day;
   picker1month;
   picker1year;
+  
 
   onDateChanged(event: IMyDateModel) {
    
     this.insert_date = event.formatted;
-    this.myDatePickerOptions2.disableUntil.year = event.date.year
-    this.myDatePickerOptions2.disableUntil.month = event.date.month
-    this.myDatePickerOptions2.disableUntil.day = event.date.day - 1
+    // this.myDatePickerOptions2.disableUntil.year = event.date.year
+    // this.myDatePickerOptions2.disableUntil.month = event.date.month
+    // this.myDatePickerOptions2.disableUntil.day = event.date.day - 1
   }
   onDateChanged2(event: IMyDateModel) {
     console.log(this.out_date, 'from date test');
@@ -247,6 +347,32 @@ export class MessinchargeComponent implements OnInit {
       this.data1 = data1.data;
       console.log(this.data1);
     })
+  } 
+  popToast() {
+    this.toasterService.pop('success', '', 'Successfully submitted your request');
+  }
+  popToast1() {
+    this.toasterService.pop('warning', '', 'ERROR');
+  }
+  goPopup2() {
+        //myModal.open()
+
+        this.popup2.options = {
+            header           : "Warning!",
+            color            : "#34495e",        // red, blue.... 
+            widthProsentage  : 50,               // The with of the popou measured by browser width 
+            animationDuration: 1,
+            showButtons      : false,            // You can hide this in case you want to use custom buttons 
+            animation        : "bounceInDown",   // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+        };
+        this.popup2.show(this.popup2.options);
+
+        //this.popup1.show();
+
+    }
+    ok() {
+      console.log('hello');
+      this.popup2.hide();
   }
 
 }

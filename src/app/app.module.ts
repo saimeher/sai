@@ -8,7 +8,6 @@ import { routing } from './app.routing';
 import { PopupModule } from 'ng2-opd-popup';
 import { DataTableModule } from "angular2-datatable";
 import { TooltipModule } from "ngx-tooltip";
-import { ToasterModule, ToasterService } from 'angular2-toaster';
 import { DatePickerModule } from 'angular-io-datepicker';
 
 import { AuthGuard } from './guards/auth.guard';
@@ -31,6 +30,8 @@ import { MenulistComponent } from './menulist/menulist.component';
 import { MyDatePickerModule } from 'mydatepicker';
 import {DataFilterPipe} from './datatable_filter';
 import {  ModalComponent } from './modal.component';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -64,6 +65,7 @@ import {  ModalComponent } from './modal.component';
     DatePickerModule,
     PopupModule.forRoot(),
     MyDatePickerModule,
+  BrowserAnimationsModule,
     
   ],
   providers: [
