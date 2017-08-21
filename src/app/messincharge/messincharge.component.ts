@@ -108,16 +108,15 @@ export class MessinchargeComponent implements OnInit {
 
   removeList(i: any) {
     console.log(i);
-    // this.addmore_length=i;
     const control = <FormArray>this.itemaddForm.controls['activeList'];
     this.rem_length = ((<FormArray>this.itemaddForm.controls['activeList']).length);
     console.log(this.rem_length);
-
-    //const addrCtrl = this.initLink();
     control.removeAt(i);
     this.addmore_length = this.rem_length - 1;
     console.log(this.addmore_length);
   }
+  
+
 
   initLink() {
     return this.fb.group({
@@ -126,33 +125,15 @@ export class MessinchargeComponent implements OnInit {
       units:['',Validators.required],
       receipt_no:['',Validators.required],
       price: ['', Validators.required],
+      // insert_date:['',Validators.required],
+      
 
     });
   }
-
-  // itemaddform() {
-  //   // this.insert['insert_date'] = this.insert_date;
-  //   this.insert['type'] = "IN";
-  //   this.insert['reg_no'] = localStorage.getItem('reg_no');
-  //   // this.mid['mid'] = it.mid;
-  //   const p = Object.assign({}, this.insert, this.itemaddForm.value);
-  //   console.log(p);
-
-  //   console.log(this.itemaddForm.value);
-  //   this._apiService.insertlist(p).subscribe(data => {
-  //     this.data = data;
-  //     console.log(this.data);
-  //     this.itemaddForm.reset();
-  //     this.stockBalance();
-  //     this.stockRegister();
-  //   })
-  // }
-
   itemaddform() {
-    // this.insert['insert_date'] = this.insert_date;
     this.insert['type'] = "IN";
     this.insert['reg_no'] = localStorage.getItem('reg_no');
-    // this.mid['mid'] = it.mid;
+    this.insert['insert_date1'] =this.insert_date;
     const p = Object.assign({}, this.insert, this.itemaddForm.value);
     console.log(p);
 
@@ -179,37 +160,37 @@ export class MessinchargeComponent implements OnInit {
         this.popToast();
         this.itemaddForm.reset();
         this.stockBalance();
-        this.stockRegister();
-       //  this._router.navigate(['/dashboard/timesheet-list']);  
+        this.stockRegister();  
     }
 
 }
 
-  addactiveList1() {
-
-    const control = <FormArray>this.itemoutForm.controls['activeList1'];
-    const addrCtrl = this.initLink1();
-    control.push(addrCtrl);
-
-    console.log(control.length);
-  }
-
-  removeList1(i: any) {
-    const control = <FormArray>this.itemoutForm.controls['activeList1'];
-    this.rem_length = ((<FormArray>this.itemoutForm.controls['activeList1']).length);
-    console.log(this.rem_length);
-
-    control.removeAt((<FormArray>this.itemoutForm.controls['activeList1']).length - 1);
-    this.addmore_length = this.rem_length - 1;
-    console.log(this.addmore_length);
-  }
-  initLink1() {
-    return this.fb.group({
+    addactiveList1() {
+  
+      const control = <FormArray>this.itemoutForm.controls['activeList1'];
+      const addrCtrl = this.initLink1();
+      control.push(addrCtrl);
+  
+      console.log(control.length);
+      this.addmore_length = (control.length);
+  
+    }
+    removeList1(i: any) {
+      console.log(i);
+      const control = <FormArray>this.itemoutForm.controls['activeList1'];
+      this.rem_length = ((<FormArray>this.itemoutForm.controls['activeList1']).length);
+      console.log(this.rem_length);
+      control.removeAt(i);
+      this.addmore_length = this.rem_length - 1;
+      console.log(this.addmore_length);
+    }
+    initLink1() {
+     return this.fb.group({
       name: ['', Validators.required],
       quantity: ['', Validators.required],
-      units: ['',Validators.required]
+      units: ['',Validators.required],
     });
-  }
+   }
 
   // itemoutform() {
   //   this.insert['type'] = "Out"
@@ -226,19 +207,44 @@ export class MessinchargeComponent implements OnInit {
   //     this.stockRegister();
   //   });
   // }
-  
-
+  count : number =0;
+ 
+   balance;
    itemoutform() {
+     console.log(this.out_date);
+    this.insert['type'] = "Out",
+    this.insert['reg_no'] = localStorage.getItem('reg_no'),
+    this.insert['out_date1'] = this.out_date;
+    console.log(this.itemoutForm.value.activeList1[0].name,this.itemoutForm.value.activeList1[0].quantity,'test2')
+      // ,this.itemoutForm.value.activeList1[1].name,this.itemoutForm.value.activeList1[1].quantity, 'test2')
+     console.log(this.itemoutForm.value.activeList1.length,'test3');
 
-  //   if (!this.itemoutForm.valid) {
-  //     this.error = true;
-  //     this.errorMessage = 'Please enter data for all mandatory fields';
-  //  }
-    this.insert['type'] = "Out"
-    this.insert['reg_no'] = localStorage.getItem('reg_no');
-    console.log(this.itemoutForm.value, this.insert)
+     var arraydata=this.itemoutForm.value.activeList1;
+     var  j = 0;
+     var num=0;
+     var numbers = [1, 2, 3];
+     var sizeofitem=this.itemoutForm.value.activeList1.length;
+     for (var _i = 0; _i < numbers.length; _i++) {
+          num = num + numbers[_i];
+     }
+
+     console.log(num,'test6');
+     
+    //  for(var i = 0; i < sizeofitem; i++ ){
+    //    if(arraydata[i].name){
+    //     j = (j + parseInt(arraydata[i].quantity));
+    //    }
+    //    else{
+
+    //    }
+    //   }
+      for(var i = 0; i < sizeofitem; i++ ){
+         j = (j + parseInt(arraydata[i].quantity));
+       }
+      console.log(j, 'test4');
+      console.log(this.count,'test5');
     const p = Object.assign({}, this.insert, this.itemoutForm.value);
-    console.log(p);
+    console.log(p,'test1');
 
     this._apiService.itemoutlist(p).subscribe(data => {
       
@@ -254,6 +260,16 @@ export class MessinchargeComponent implements OnInit {
     if (!data.data.success)
     {
         console.error('Saving failed');
+        this.balance = data.data.data;
+        console.log(data.data.data);
+        // this.stock_data.forEach(element => {
+        //   let i=0;
+        //   if(element.id==this.balance[i]){
+        //     console.log(this.balance[i]);
+            
+        //   }
+        //   i++;
+        // });
          this.goPopup2();
         //  this.popToast1();
         this.error = true;
@@ -292,15 +308,17 @@ export class MessinchargeComponent implements OnInit {
   
 
   onDateChanged(event: IMyDateModel) {
-   
-    this.insert_date = event.formatted;
+    this.insert_date = event.date.year+'-'+event.date.month+'-'+event.date.day;
+    console.log(this.insert_date,'dtae test');
+    // this.insert_date = event.formatted;
     // this.myDatePickerOptions2.disableUntil.year = event.date.year
     // this.myDatePickerOptions2.disableUntil.month = event.date.month
     // this.myDatePickerOptions2.disableUntil.day = event.date.day - 1
   }
   onDateChanged2(event: IMyDateModel) {
+    this.out_date = event.date.year+'-'+event.date.month+'-'+event.date.day;
     console.log(this.out_date, 'from date test');
-    this.out_date = event.formatted
+    // this.out_date = event.formatted
   }
 
   stockRegister() {
@@ -355,7 +373,7 @@ export class MessinchargeComponent implements OnInit {
     this.toasterService.pop('warning', '', 'ERROR');
   }
   goPopup2() {
-        //myModal.open()
+        //myModal.open()    
 
         this.popup2.options = {
             header           : "Warning!",
