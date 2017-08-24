@@ -77,6 +77,24 @@ export class ApiService {
     const body = {}
     return this.callApi(AppSettings.STOCKBALANCE_API, 'get', body);
   }
+  getunits(data)
+  {
+    const body={}
+    return this.callApi(AppSettings.GETUNITS_API, 'post', data);
+  }
+  updatemateriallist(data) {
+    return this.callApi(AppSettings.UPDATEMATERIALLIST_API, 'post', data);
+  }
+  purchaserlist(data)
+  {
+    return this.callApi(AppSettings.PURCHASERLIST_API, 'post', data);
+  }
+  deleteitem(data)
+  {
+    return this.callApi(AppSettings.DELETEITEM_API, 'post', data);
+  }
+  
+
  
 
   // responsible for making api calls

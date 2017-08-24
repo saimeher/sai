@@ -17,13 +17,14 @@ import { ToasterContainerComponent, ToasterService, ToasterConfig, Toast } from 
 })
 export class MessinchargeComponent implements OnInit {
   objectKeys = Object.keys;
-
+  newitemaddForm: FormGroup;
   itemaddForm: FormGroup;
   itemoutForm: FormGroup;
   addmore_length;
   insert_date;
   out_date;
   data1;
+  dat1 = [];
   mid;
   data2;
   stock_data;
@@ -34,18 +35,20 @@ export class MessinchargeComponent implements OnInit {
   data;
   insert = {};
   item;
-  todaydate=new Date();
-  public toasterconfig: ToasterConfig = 
+  value1;
+  array;
+  data3;
+
+  todaydate = new Date();
+  public toasterconfig: ToasterConfig =
   new ToasterConfig({
-
-      // showCloseButton: true,
-      // tapToDismiss   : true,
-      timeout        : 5000
-
+    timeout: 5000
   });
   public toasterService: ToasterService;
   @ViewChild('modal1') modal1: ModalComponent;
   @ViewChild('popup2') popup2: Popup;
+  @ViewChild('popup1') popup1: Popup;
+  @ViewChild('popup3') popup3: Popup;
   // public data;
   public filterQuery = "";
   public filterQuery1 = "";
@@ -53,14 +56,20 @@ export class MessinchargeComponent implements OnInit {
   public sortBy = "name";
   public sortOrder = "asc";
 
+
   constructor(private _router: Router,
     private _route: ActivatedRoute,
     private _apiService: ApiService,
     public fb: FormBuilder,
-    toasterService: ToasterService)
-     {
-      this.toasterService = toasterService;
-     };
+    toasterService: ToasterService,
+    public popup: Popup) {
+    this.toasterService = toasterService;
+
+
+    this.stockRegister();
+    this.stockBalance();
+    this.getlists();
+  }
 
   slots: Array<any> = [
 
@@ -70,14 +79,15 @@ export class MessinchargeComponent implements OnInit {
     { name: 'Dinner' },
   ];
   units: Array<any> = [
-    
-        { u: 'kgs' },
-        { u: 'litres'},
-        { u: 'packets'},
-        { u: 'gms'},
-      ];
-      
 
+    { u: 'kgs' },
+    { u: 'litres' },
+    { u: 'packets' },
+    { u: 'gms' },
+  ];
+
+  //  a: any;
+  //  events={};
   ngOnInit() {
     this.itemaddForm = this.fb.group({
       insert_date: ['', Validators.required],
@@ -88,12 +98,17 @@ export class MessinchargeComponent implements OnInit {
       slot: ['', Validators.required],
       activeList1: this.fb.array([]),
     });
+    this.newitemaddForm = this.fb.group({
+      item1: ['', Validators.required],
+      units1: ['', Validators.required],
+      minvalue: ['', Validators.required]
+    });
     this.addactiveList1();
-    this.getlists();
+
     this.addactiveList();
 
-    this.stockRegister();
-    this.stockBalance();
+
+    //   this.getunits(this.events,this.a)
   }
   addactiveList() {
 
@@ -115,25 +130,26 @@ export class MessinchargeComponent implements OnInit {
     this.addmore_length = this.rem_length - 1;
     console.log(this.addmore_length);
   }
-  
+
 
 
   initLink() {
     return this.fb.group({
       name: ['', Validators.required],
       quantity: ['', Validators.required],
-      units:['',Validators.required],
-      receipt_no:['',Validators.required],
+      //  units:['',Validators.required],
+      receipt_no: ['', Validators.required],
       price: ['', Validators.required],
+      unitsarray: [],
       // insert_date:['',Validators.required],
-      
+
 
     });
   }
   itemaddform() {
     this.insert['type'] = "IN";
     this.insert['reg_no'] = localStorage.getItem('reg_no');
-    this.insert['insert_date1'] =this.insert_date;
+    this.insert['insert_date1'] = this.insert_date;
     const p = Object.assign({}, this.insert, this.itemaddForm.value);
     console.log(p);
 
@@ -142,156 +158,108 @@ export class MessinchargeComponent implements OnInit {
 
       this.onSaveComplete(data)
     },
-    (error: any) => this.errorMessage = <any>error
-  );
+      (error: any) => this.errorMessage = <any>error
+    );
   }
   onSaveComplete(data): void {
     console.log(data);
-    
-    if (!data.success)
-    {
-        console.error('Savign failed');
-        this.error = true;
-        this.errorMessage = data.error;
+
+    if (!data.success) {
+      console.error('Savign failed');
+      this.error = true;
+      this.errorMessage = data.error;
     }
-     else 
-    {
-        console.log('Saving successful');
-        this.popToast();
-        this.itemaddForm.reset();
-        this.stockBalance();
-        this.stockRegister();  
+    else {
+      console.log('Saving successful');
+      this.popToast();
+      this.itemaddForm.reset();
+      this.ngOnInit();
+      // this.itemaddForm.clearValidators();
+      // this.initLink();
+      this.stockBalance();
+      this.stockRegister();
     }
 
-}
+  }
 
-    addactiveList1() {
-  
-      const control = <FormArray>this.itemoutForm.controls['activeList1'];
-      const addrCtrl = this.initLink1();
-      control.push(addrCtrl);
-  
-      console.log(control.length);
-      this.addmore_length = (control.length);
-  
-    }
-    removeList1(i: any) {
-      console.log(i);
-      const control = <FormArray>this.itemoutForm.controls['activeList1'];
-      this.rem_length = ((<FormArray>this.itemoutForm.controls['activeList1']).length);
-      console.log(this.rem_length);
-      control.removeAt(i);
-      this.addmore_length = this.rem_length - 1;
-      console.log(this.addmore_length);
-    }
-    initLink1() {
-     return this.fb.group({
+  addactiveList1() {
+
+    const control = <FormArray>this.itemoutForm.controls['activeList1'];
+    const addrCtrl = this.initLink1();
+    control.push(addrCtrl);
+
+    console.log(control.length);
+    this.addmore_length = (control.length);
+
+  }
+  removeList1(i: any) {
+    console.log(i);
+    const control = <FormArray>this.itemoutForm.controls['activeList1'];
+    this.rem_length = ((<FormArray>this.itemoutForm.controls['activeList1']).length);
+    console.log(this.rem_length);
+    control.removeAt(i);
+    this.addmore_length = this.rem_length - 1;
+    console.log(this.addmore_length);
+  }
+  initLink1() {
+    return this.fb.group({
       name: ['', Validators.required],
       quantity: ['', Validators.required],
-      units: ['',Validators.required],
+      // units: ['',Validators.required],
     });
-   }
-
-  // itemoutform() {
-  //   this.insert['type'] = "Out"
-  //   this.insert['reg_no'] = localStorage.getItem('reg_no');
-  //   console.log(this.itemoutForm.value, this.insert)
-  //   const p = Object.assign({}, this.insert, this.itemoutForm.value);
-  //   console.log(p);
-
-  //   this._apiService.itemoutlist(p).subscribe(data => {
-  //     this.data = data;
-  //     this.popToast();
-  //     this.itemoutForm.reset();
-  //     this.stockBalance();
-  //     this.stockRegister();
-  //   });
-  // }
-  count : number =0;
- 
-   balance;
-   itemoutform() {
-     console.log(this.out_date);
+  }
+  balance;
+  itemoutform() {
+    console.log(this.out_date);
     this.insert['type'] = "Out",
-    this.insert['reg_no'] = localStorage.getItem('reg_no'),
-    this.insert['out_date1'] = this.out_date;
-    console.log(this.itemoutForm.value.activeList1[0].name,this.itemoutForm.value.activeList1[0].quantity,'test2')
-      // ,this.itemoutForm.value.activeList1[1].name,this.itemoutForm.value.activeList1[1].quantity, 'test2')
-     console.log(this.itemoutForm.value.activeList1.length,'test3');
-
-     var arraydata=this.itemoutForm.value.activeList1;
-     var  j = 0;
-     var num=0;
-     var numbers = [1, 2, 3];
-     var sizeofitem=this.itemoutForm.value.activeList1.length;
-     for (var _i = 0; _i < numbers.length; _i++) {
-          num = num + numbers[_i];
-     }
-
-     console.log(num,'test6');
-     
-    //  for(var i = 0; i < sizeofitem; i++ ){
-    //    if(arraydata[i].name){
-    //     j = (j + parseInt(arraydata[i].quantity));
-    //    }
-    //    else{
-
-    //    }
-    //   }
-      for(var i = 0; i < sizeofitem; i++ ){
-         j = (j + parseInt(arraydata[i].quantity));
-       }
-      console.log(j, 'test4');
-      console.log(this.count,'test5');
+      this.insert['reg_no'] = localStorage.getItem('reg_no'),
+      this.insert['out_date1'] = this.out_date;
     const p = Object.assign({}, this.insert, this.itemoutForm.value);
-    console.log(p,'test1');
+    console.log(p, 'test1');
 
     this._apiService.itemoutlist(p).subscribe(data => {
-      
+
       this.outForm(data)
     },
-    (error: any) => this.errorMessage = <any>error
+      (error: any) => this.errorMessage = <any>error
     );
-    }
+  }
 
-   outForm(data): void {
+  outForm(data): void {
     console.log(data);
-    
-    if (!data.data.success)
-    {
-        console.error('Saving failed');
-        this.balance = data.data.data;
-        console.log(data.data.data);
-        // this.stock_data.forEach(element => {
-        //   let i=0;
-        //   if(element.id==this.balance[i]){
-        //     console.log(this.balance[i]);
-            
-        //   }
-        //   i++;
-        // });
-         this.goPopup2();
-        //  this.popToast1();
-        this.error = true;
-        this.errorMessage = data.error;
+
+    if (!data.data.success) {
+      console.error('Saving failed');
+      this.balance = data.data.data;
+      console.log(data.data.data);
+      this.goPopup2();
+      //  this.popToast1();
+      this.error = true;
+      this.errorMessage = data.error;
     }
-     else 
-    {
-        console.log('Saving successful');
-        this.popToast();
-        this.itemoutForm.reset();
-        this.stockBalance();
-        this.stockRegister(); 
+    else {
+      console.log('Saving successful');
+      this.popToast();
+      this.itemoutForm.reset();
+      this.stockBalance();
+      this.stockRegister();
+      this.itemoutForm.patchValue({
+        out_date: [''],
+        slot: [''],
+        activeList1: this.fb.array([]),
+      })
+
+
     }
 
-}
+  }
 
   public myDatePickerOptions: IMyDpOptions = {
     // other options...
     dateFormat: 'yyyy-mmm-dd',
     editableDateField: false,
     disableWeekends: false,
-    disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth()+1, day: this.todaydate.getDate()+1 }
+    disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth() + 1, day: this.todaydate.getDate() + 1 }
 
   };
 
@@ -300,23 +268,23 @@ export class MessinchargeComponent implements OnInit {
     dateFormat: 'yyyy-mmm-dd',
     editableDateField: false,
     disableWeekends: false,
-    disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth()+1, day: this.todaydate.getDate()+1 }
+    disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth() + 1, day: this.todaydate.getDate() + 1 }
   };
   picker1day;
   picker1month;
   picker1year;
-  
+
 
   onDateChanged(event: IMyDateModel) {
-    this.insert_date = event.date.year+'-'+event.date.month+'-'+event.date.day;
-    console.log(this.insert_date,'dtae test');
+    this.insert_date = event.date.year + '-' + event.date.month + '-' + event.date.day;
+    console.log(this.insert_date, 'dtae test');
     // this.insert_date = event.formatted;
     // this.myDatePickerOptions2.disableUntil.year = event.date.year
     // this.myDatePickerOptions2.disableUntil.month = event.date.month
     // this.myDatePickerOptions2.disableUntil.day = event.date.day - 1
   }
   onDateChanged2(event: IMyDateModel) {
-    this.out_date = event.date.year+'-'+event.date.month+'-'+event.date.day;
+    this.out_date = event.date.year + '-' + event.date.month + '-' + event.date.day;
     console.log(this.out_date, 'from date test');
     // this.out_date = event.formatted
   }
@@ -336,7 +304,11 @@ export class MessinchargeComponent implements OnInit {
   stockBalance() {
     this._apiService.stockBalance().subscribe(stockbalance => {
       if (stockbalance) {
-
+       
+        for(var i=0;i<stockbalance.data.data.length;i++){
+          stockbalance.data.data[i].total_balance= parseInt(stockbalance.data.data[i].total_balance);
+          stockbalance.data.data[i].minvalue= parseInt(stockbalance.data.data[i].minvalue);
+        }
         this.stock_balance = stockbalance.data.data;
         console.log(this.stock_balance);
       }
@@ -346,18 +318,44 @@ export class MessinchargeComponent implements OnInit {
   addnewitem() {
     this.modal1.show();
   }
+
+  // submit() {
+  //   console.log(this.newitemaddForm.value);
+  //   this._apiService.addnewitem(this.newitemaddForm.value).subscribe(data2 => {
+  //     this.data2 = data2;
+  //     this.getlists();
+  //   })
+  //   this.modal1.hide();
+  // }
   submit() {
-    console.log(this.item)
-    let value = {
-      'item': this.item
-    };
-    this._apiService.addnewitem(value).subscribe(data2 => {
-      this.data2 = data2;
-      this.getlists();
-    })
-    this.modal1.hide();
+    console.log(this.newitemaddForm.value);
+    this._apiService.addnewitem(this.newitemaddForm.value).subscribe(data2 => {
+      console.log(data2);
+
+      if (!data2.data.success) {
+        console.log('insert failsed');
+        this.popToast1();
+
+      }
+      else {
+        console.log(data2.data.success)
+        // this.data2 = data2;
+        console.log('insert');
+
+        this.getlists();
+        this.popToast();
+        this.newitemaddForm.reset();
+        this.modal1.hide();
+      }
+    }
+    )
+
   }
+
   close() {
+    this.popup1.hide();
+  }
+  close4() {
     this.modal1.hide();
   }
   getlists() {
@@ -365,32 +363,123 @@ export class MessinchargeComponent implements OnInit {
       this.data1 = data1.data;
       console.log(this.data1);
     })
-  } 
+  }
   popToast() {
     this.toasterService.pop('success', '', 'Successfully submitted your request');
   }
   popToast1() {
-    this.toasterService.pop('warning', '', 'ERROR');
+    this.toasterService.pop('warning', 'Item Already Existed', 'ERROR');
   }
   goPopup2() {
-        //myModal.open()    
+    //myModal.open()    
 
-        this.popup2.options = {
-            header           : "Warning!",
-            color            : "#34495e",        // red, blue.... 
-            widthProsentage  : 50,               // The with of the popou measured by browser width 
-            animationDuration: 1,
-            showButtons      : false,            // You can hide this in case you want to use custom buttons 
-            animation        : "bounceInDown",   // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
-        };
-        this.popup2.show(this.popup2.options);
+    this.popup2.options = {
+      header: "Warning!",
+      color: "#34495e",        // red, blue.... 
+      widthProsentage: 50,               // The with of the popou measured by browser width 
+      animationDuration: 1,
+      showButtons: false,            // You can hide this in case you want to use custom buttons 
+      animation: "bounceInDown",   // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+    };
+    this.popup2.show(this.popup2.options);
 
-        //this.popup1.show();
+    //this.popup1.show();
+  }
+  ok() {
+    console.log('hello');
+    this.popup2.hide();
+    this.balance = '';
+  }
+  details(its) {
+    this.mid = its.mid;
 
-    }
-    ok() {
-      console.log('hello');
-      this.popup2.hide();
+    this.newitemaddForm.patchValue({
+      item1: its.item,
+      units1: its.units,
+      minvalue: its.minvalue
+    });
+
+    this.popup.options = {
+      header: "Success!",
+      color: "#34495e", // red, blue.... 
+      widthProsentage: 50, // The with of the popou measured by browser width 
+      animationDuration: 1, // in seconds, 0 = no animation 
+      showButtons: false, // You can hide this in case you want to use custom buttons 
+      confirmBtnContent: "ok", // The text on your confirm button 
+      cancleBtnContent: "Cancel", // the text on your cancel button 
+      confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
+      cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
+      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+    };
+    console.log(its);
+
+    this.popup1.show();
   }
 
+  Update() {
+    let insert = {};
+    insert['mid'] = this.mid;
+    insert['units1'] = this.newitemaddForm.value.units1;
+    insert['item1'] = this.newitemaddForm.value.item1;
+    insert['minvalue'] = this.newitemaddForm.value.minvalue;
+    console.log(insert);
+
+    this._apiService.updatemateriallist(insert).subscribe(data3 => {
+      if (data3.data.success) {
+        this.data3 = data3;
+        this.newitemaddForm.reset();
+        this.popup1.hide();
+        this.popToast();
+        this.stockBalance();
+      }
+      else {
+        this.popToast1();
+      }
+    });
+
+
+
+  }
+  delete1()
+  {
+    let data={}
+    data['mid']=this.mid;
+    console.log(data);
+  this._apiService.deleteitem(data).subscribe(det=>{
+      console.log(det);
+      this.stockBalance();
+      this.popup3.hide();
+      this.popToast3();
+       
+    })
+  }
+  delete(its) {
+    let data={}
+    this.mid=its.mid;
+    this.item=its.item;
+
+    this.popup.options = {
+      header: "Success!",
+      color: "#34495e", // red, blue.... 
+      widthProsentage: 50, // The with of the popou measured by browser width 
+      animationDuration: 1, // in seconds, 0 = no animation 
+      showButtons: false, // You can hide this in case you want to use custom buttons 
+      confirmBtnContent: "ok", // The text on your confirm button 
+      cancleBtnContent: "Cancel", // the text on your cancel button 
+      confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
+      cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
+      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+    };
+    console.log(its);
+
+    this.popup3.show();
+  }
+  close1()
+  {
+    this.popup3.hide();
+  }
+
+  popToast3() {
+    this.toasterService.pop('success', '', 'Successfully deleted'  +  this.item );
+  }
 }

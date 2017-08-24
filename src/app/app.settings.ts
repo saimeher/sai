@@ -16,8 +16,12 @@ export class AppSettings {
       public static ITEMOUTLIST_API:string = 'http://localhost/hmsserver/Api/itemoutlist';
       public static ADDNEWITEM_API: string ='http://localhost/hmsserver/Api/addnewitem';
       public static MENULIST_API: string = 'http://localhost/hmsserver/Api/menulist';
-     public static  GETMENULIST_API: string = 'http://localhost/hmsserver/Api/getmenulist';
+      public static  GETMENULIST_API: string = 'http://localhost/hmsserver/Api/getmenulist';
       public static UPDATELIST_API: string = 'http://localhost/hmsserver/Api/updatelist';
       public static STOCKREGISTER_API: string = 'http://localhost/hmsserver/Api/stockRegister';
       public static STOCKBALANCE_API: string = 'http://localhost/hmsserver/Api/stockBalance';
+      public static GETUNITS_API: string ='http://localhost/hmsserver/APi/getunits';
+      public static UPDATEMATERIALLIST_API: string = 'http://localhost/hmsserver/Api/updatematerialslist';
+      public static PURCHASERLIST_API: string = 'http://localhost/hmsserver/Api/purchaserlist';
+      public static DELETEITEM_API:string = 'http://localhost/hmsserver/Api/deleteitem';
 }

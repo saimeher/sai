@@ -50,11 +50,22 @@
             </li>
             <li class=""><a href="#balance" data-toggle="tab">Stock Balance</a>
             </li>
+            <li class=""><a href="#material" data-toggle="tab">Materials</a>
+            </li>
           </ul>
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="in">
               <button (click)="addactiveList()" class="btn btn-default btn-sm pull-right btn-custom " style="margin-top: 24px;"><i class="fa fa-plus" ></i> More</button>
-
+              <!--<div class="form-group">
+                    <div class="row">
+                      <label class="control-label col-md-1">Date</label>
+                      <div class="col-md-2">
+                        <my-date-picker locale="en" #start [(ngModel)]="insert_date" name="insert_date" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
+                          (dateChanged)="onDateChanged($events)"></my-date-picker>
+                      </div>
+                      <button (click)="addnewitem()" type="button" style="margin-left:10px" class="btn btn-blue pull-left btn-square">Add new</button>
+                    </div>
+                  </div>-->
               <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm">
                 <div class="form-horizontal">
                   <div class="form-group">
@@ -74,9 +85,9 @@
                     <div class="col-md-2">
                       <label>Quantity</label>
                     </div>
-                    <div class="col-md-2">
+                    <!--<div class="col-md-2">
                       <label>Units</label>
-                    </div>
+                    </div>-->
                     <div class="col-md-2">
                       <label>Receipt No</label>
                     </div>
@@ -89,29 +100,30 @@
 
                 <div *ngFor="let numbersActivities of itemaddForm.controls.activeList['controls'];let p=index;" class="">
                   <div [formGroup]="itemaddForm.controls.activeList.controls[p]">
+
                     <div class="form-horizontal">
                       <div class="form-group">
                         <div class="col-md-2">
-                          <select class="form-control" formControlName="name" name="name">
-                            <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}</option>
+                          <select class="form-control" formControlName="name" name="name{{p}}">
+                            <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}} - {{it.units}}</option>
                             <!--<option *ngFor="let key of objectKeys(data1)" value="{{it.mid}}">{{key + ' : ' + data1[key]}}</option>-->
                           </select>
                         </div>
                         <div class="col-md-2">
-                          <input type="text" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
+                          <input type="number" min="1" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
                         </div>
-                        <div class="col-md-2">
-                          <select class="form-control" formControlName="units" name="units">
-                           <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                        
+                        <!--<div class="col-md-2">
+                          <select class="form-control" formControlName="units"  name="units">                                     
+                          <option  *ngFor="let user of itemaddForm.value.activeList[p].unitsarray"  value="{{user}}">{{user}}</option>
                           </select>
+                        </div>-->
+                        <div class="col-md-2">
+                          <input type="text" name="receipt_no" class="form-control" value="receipt_no" formControlName="receipt_no" />
                         </div>
                         <div class="col-md-2">
-                          <input type="number" name="receipt_no" class="form-control" value="receipt_no" formControlName="receipt_no" />
+                          <input type="number" name="price" min="1" class="form-control" value="price" formControlName="price" />
                         </div>
-                        <div class="col-md-2">
-                          <input type="text" name="price" class="form-control" value="price" formControlName="price" />
-                        </div>
-                        <a  *ngIf="1<itemaddForm.controls.activeList.length" (click)="removeList(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 10px; color: #ff3833;"></i></a>
+                        <a *ngIf="1<itemaddForm.controls.activeList.length" (click)="removeList(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 10px; color: #ff3833;"></i></a>
                       </div>
                     </div>
                   </div>
@@ -127,7 +139,7 @@
             </div>
 
             <div class="tab-pane fade" id="out">
-                <button (click)="addactiveList1()" class="btn btn-default btn-sm pull-right btn-custom " style="margin-top: 24px;"><i class="fa fa-plus" ></i> More</button>
+              <button (click)="addactiveList1()" class="btn btn-default btn-sm pull-right btn-custom " style="margin-top: 24px;"><i class="fa fa-plus" ></i> More</button>
               <form (ngSubmit)="itemoutform()" method="post" [formGroup]="itemoutForm">
                 <div class="form-horizontal">
                   <div class="form-group">
@@ -152,9 +164,9 @@
                     <div class="col-md-3">
                       <label>Quantity</label>
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                       <label>Units</label>
-                    </div>
+                    </div>-->
 
                   </div>
                 </div>
@@ -166,21 +178,21 @@
                         <div class="col-md-3">
 
                           <select class="form-control" formControlName="name" name="name">
-                        <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}</option>
+                        <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}} - {{it.units}}</option>
                       </select>
                         </div>
                         <div class="col-md-2">
 
-                          <input type="text" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
+                          <input type="number" min="1" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
                         </div>
-                        <div class="col-md-2">
+                        <!--<div class="col-md-2">
 
                           <select class="form-control" formControlName="units" name="units">
                             <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
                           </select>
-                        </div>
-                       
-                             
+                        </div>-->
+
+
                         <!-- <div class="col-md-4">
 
                           <button *ngIf="p > 0 " (click)="removeList1(p)" type="button" style="margin-right:10px" class="btn btn-danger pull-right btn-square">Remove</button>
@@ -189,6 +201,11 @@
                         <a *ngIf="1<itemoutForm.controls.activeList1.length" (click)="removeList1(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 10px; color: #ff3833;"></i></a>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p><span style="color:red">   {{balance}} </span></p>
                   </div>
                 </div>
                 <div class="row">
@@ -316,6 +333,7 @@
                             </th>
 
 
+
                             <th>
                               <mfDefaultSorter by="total_balance">Balance</mfDefaultSorter>
                             </th>
@@ -323,10 +341,89 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let items of mf.data; let i=index;">
+                          <tr *ngFor="let it of mf.data; let i=index;">
                             <td>{{i+1}}</td>
-                            <td>{{items.item}}</td>
-                            <td>{{items.total_balance}}</td>
+                            <td #minval>{{it.item}}</td>
+
+
+                            <td *ngIf="it.total_balance  >= it.minvalue"><span class="badge green" style="margin: 0px 40px 0px 2px;">{{it.total_balance}}</span></td>
+                            <td *ngIf="it.total_balance <= it.minvalue"><span class="badge red " style="margin: 0px 40px 0px 2px;">{{it.total_balance}}</span></td>
+
+                            <!-- <td *ngIf="it.total_balance >= it.minvalue " style="text-align: center;"> <span class="badge green" style="margin: 0px 40px 0px 2px;"> {{it.total_balance}} </span> </td>
+                            <td *ngIf="it.total_balance <= it.minvalue " style="text-align: center;"> <span class="badge red" style="margin: 0px 40px 0px 2px;"> {{it.total_balance}} </span></td>
+                             -->
+                            <!-- <td  *ngIf="items.total_balance<=items.minvalue"><span class="badge red" style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span></td> -->
+                            <!-- <td>{{items.total_balance}}</td>-->
+                          </tr>
+                        </tbody>
+
+                        <tfoot>
+                          <tr>
+                            <td colspan="12">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="material">
+              <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                  <div class="portlet-title">
+                    <h4>Material</h4>
+                  </div>
+
+                  <div class="clearfix"></div>
+                </div>
+                <div *ngIf="stock_balance" class="portlet-body">
+                  <div class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 tabel_overflow">
+
+                      <table class="table table-bordered table-green" [mfData]="stock_balance | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                          <tr>
+                            <th>
+                              <mfDefaultSorter by="">S.NO</mfDefaultSorter>
+                            </th>
+
+                            <th>
+                              <mfDefaultSorter by="item">Item Name</mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="minvalue">Minimum Stock</mfDefaultSorter>
+                            </th>
+
+                            <th>Details if edited</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let its of mf.data; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{its.item}}</td>
+                            <td>{{its.minvalue}}</td>
+                            <!--                               
+                             <td  *ngIf="its.total_balance  >=  its.minvalue"><span class="badge green" style="margin: 0px 40px 0px 2px;">{{its.total_balance}}</span></td> 
+                             <td *ngIf="its.total_balance <=  its.minvalue"><span class="badge red " style="margin: 0px 40px 0px 2px;">{{its.total_balance}}</span></td> 
+                             -->
+
+                            <td style="text-align: center">
+                              <a class="btn btn-info btn-xs btn-square" (click)="details(its)" style="margin-right: 5px; width: 50px;">Edit</a>
+                              <a class="btn btn-danger btn-xs btn-square" (click)="delete(its)" >Delete</a>
+                            </td>
+
                           </tr>
                         </tbody>
 
@@ -359,20 +456,56 @@
 <app-modal #modal1>
   <div class="app-modal-header">
     <h4 style="color:black">
-      Add New item <a data-dismiss="modal" class="pull-right" (click)="close()">x</a>
+      Add New item <a data-dismiss="modal" class="pull-right" (click)="close4()">x</a>
     </h4>
   </div>
   <div class="app-modal-body">
-
-    <label class="col-sm-4 control-label">Item</label>
-    <div class="col-sm-4">
-      <input type="text" name="item" [(ngModel)]="item" required/>
+    <div class="col-lg-12">
+      <div class="portlet  portlet-default">
+        <div class="portlet-heading">
+          <div class="portlet-title">
+            <h4>Add Item</h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <form (ngSubmit)="submit()" method="post" [formGroup]="newitemaddForm">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Item</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="item1" value="item1" formControlName="item1" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Units</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="units1" name="units1">
+                          <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Minimum Stock</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" name="minvalue" value="minvalue" formControlName="minvalue" />
+                  </div>
+                </div>
+              <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-5">
+                  <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- /.portlet -->
     </div>
-
   </div>
-  <div class="app-modal-footer" style="margin-top: 10px;">
+  <!-- <div class="app-modal-footer" style="margin-top: 10px;">
     <button type="button" class="btn btn-default btn-square" (click)="submit();">Submit</button>
-  </div>
+  </div> -->
 </app-modal>
 <popup #popup2 (confirmClick)="ok()">
   <div>
@@ -389,4 +522,68 @@
     </div>
     <br>
   </div>
+</popup>
+<popup #popup1 (confirmClick)="ok()">
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <form (ngSubmit)="Update()" method="post" [formGroup]="newitemaddForm">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Item</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="item1" value="item1" formControlName="item1" disabled />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Units</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="units1" name="units1">
+                          <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Minimum Stock</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="minvalue" value="minvalue" formControlName="minvalue" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-4">
+                  <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+                  <button data-dismiss="modal" class="pull-right" (click)="close()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+
+                  <!--<a data-dismiss="modal" class="pull-right" (click)="close()">x</a>-->
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- /.portlet -->
+    </div>
+  </div>
+</popup>
+
+<popup #popup3>
+    <div>
+  
+      <div>
+  
+        <div class="alert alert-success " role="alert ">Are you want to delete? - {{item}}</div>
+      </div>
+      <div>
+          <button type="button" class="btn btn-default btn-square" (click)="delete1();">Yes</button>
+          <button type="button" class="btn btn-danger btn-square" (click)="close1();">No</button>
+      </div>
+      <br>
+    </div>
 </popup>
